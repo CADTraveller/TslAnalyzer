@@ -1,10 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity
-    Name="12828599-a57b-4879-9e53-d51fc4d5e264"
-    Publisher = "CN=cc"
-    Version = "1.0.0.0" /> 
-  <mp:PhoneIdentity PhoneProductId="12828599-a57b-4879-9e53-d51fc4d5e264" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <Identity Name="12828599-a57b-4879-9e53-d51fc4d5e264" Publisher="CN=cc" Version="1.0.0.0" />
+  <mp:PhoneIdentity PhoneProductId="12828599-a57b-4879-9e53-d51fc4d5e264" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>TslAnalyzer</DisplayName>
     <PublisherDisplayName>cc</PublisherDisplayName>
@@ -23,9 +20,27 @@
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.fileOpenPicker">
+          <uap:FileOpenPicker>
+            <uap:SupportedFileTypes>
+              <uap:FileType>.mcr</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileOpenPicker>
+        </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="tsl">
+            <uap:DisplayName>Tsl Script</uap:DisplayName>
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="application/plaintext">.mcr</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+      </Extensions>
     </Application>
   </Applications>
   <Capabilities>
-    <Capability Name="internetClient" />
+    <Capability Name="privateNetworkClientServer" />
+    <uap:Capability Name="removableStorage" />
   </Capabilities>
 </Package>
