@@ -15,12 +15,6 @@ namespace TslAnalyzer.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
-        string getLastScriptPath()
-        {
-            var appData = Windows.Storage.ApplicationData.Current.LocalSettings;
-            var lastPath = appData.Values["lastScriptPath"]?.ToString();
-            return lastPath;
-        }
 
         public MainPageViewModel()
         {
@@ -32,23 +26,16 @@ namespace TslAnalyzer.ViewModels
             var lastScriptPath = getLastScriptPath();
 
 
-            //if ()
-            ////__Try to load last file
-            //try
-            //{
-            //    executeBrowseForFile();
-            //    parseFile(lastScriptPath);
-            //}
-            //catch (Exception e)
-            //{
-            //    ApplicationData.Current.LocalSettings.Values["lastScriptPath"] = "";
-            //    WindowTitle = "No Script Loaded, " + e.Message;
-            //}
+        }
 
+        string getLastScriptPath()
+        {
+            var appData = Windows.Storage.ApplicationData.Current.LocalSettings;
+            var lastPath = appData.Values["lastScriptPath"]?.ToString();
+            return lastPath;
         }
 
         private string windowTitle = "No File Loaded";
-
         public string WindowTitle
         {
             get { return windowTitle; }
@@ -56,21 +43,48 @@ namespace TslAnalyzer.ViewModels
         }
 
         private Script currentScript;
-
         public Script CurrentScript
         {
             get { return currentScript; }
             set { Set(ref currentScript, value); }
         }
-        public ObservableCollection<Line> DisplayedLines;
+
+        private ObservableCollection<Variable> variables;
+        public ObservableCollection<Variable> Variables
+        {
+            get { return variables; }
+            set { Set(ref variables, value); }
+        }
         public ObservableCollection<Variable> SelectedVariables;
-        public bool ShowMutated;
-        public bool ShowReferenced;
 
-        DelegateCommand _RefreshFromFile;
+        private ObservableCollection<Line> displayedLines;
 
+        public ObservableCollection<Line> DisplayedLines
+        {
+            get { return displayedLines; }
+            set { Set(ref displayedLines, value); }
+        }
+
+        private bool showMutated;
+        public bool ShowMutated
+        {
+            get { return showMutated; }
+            set { Set(ref showMutated, value); }
+        }
+
+
+        private bool showReferenced;
+        public bool ShowReferenced
+        {
+            get { return showReferenced; }
+            set { Set(ref showReferenced, value); }
+        }
+
+       
+
+        DelegateCommand _refreshFromFile;
         public DelegateCommand RefreshFromFile
-            => _RefreshFromFile ?? (_RefreshFromFile = new DelegateCommand(ExecuteRefresh, CanRefresh));
+            => _refreshFromFile ?? (_refreshFromFile = new DelegateCommand(ExecuteRefresh, CanRefresh));
 
         private bool CanRefresh()
         {
@@ -86,13 +100,15 @@ namespace TslAnalyzer.ViewModels
         private void ExecuteRefresh()
         {
             StorageFile lastFile = StorageFile.GetFileFromPathAsync(getLastScriptPath()).GetResults();
-            parseFile(lastFile);
+            CurrentScript = ScriptParser.parseFile(lastFile).Result;
         }
 
         DelegateCommand _browseForFileCommand;
 
         public DelegateCommand BrowseForFileCommand
             => _browseForFileCommand ?? (new DelegateCommand(executeBrowseForFile));
+
+       
 
         private async void executeBrowseForFile()
         {
@@ -103,69 +119,11 @@ namespace TslAnalyzer.ViewModels
 
             if (scriptFile == null) return;
 
-            parseFile(scriptFile);
+            CurrentScript = ScriptParser.parseFile(scriptFile).Result;
             ApplicationData.Current.LocalSettings.Values["lastScriptPath"] = scriptFile.Path;
         }
 
-        private async void parseFile(string filePath)
-        {
-            try
-            {
-                StorageFile lastFile = await StorageFile.GetFileFromPathAsync(getLastScriptPath());
-                parseFile(lastFile);
-
-            }
-            catch (Exception e)
-            {
-                WindowTitle = e.Message;
-            }
-        }
-
-        private async void parseFile(StorageFile file)
-        {
-            try
-            {
-                if (CurrentScript == null) CurrentScript = new Script();
-                CurrentScript.Clear();
-                char[] delimiterChars = { ' ', ',', '.', ':', '\t', '=', '/', '(', ')', '[', ']', '*', '+', '>', '<', '?', '!' };
-                var allLines = await FileIO.ReadLinesAsync(file);
-                bool atContents = false;
-                foreach (string line in allLines)
-                {
-                    string[] words = line.Split(delimiterChars);
-
-                    if (words.Length == 0) continue;
-
-                    //__check for end of content section
-                    if (words.Length == 1 && words[0] == "#End" && atContents) break;
-
-                    //__check for start of content section
-                    if (words.Contains("#BeginContents") && !atContents)
-                    {
-                        atContents = true;
-                        continue;
-                    }
-
-                    if (!atContents)//__only interested in version number from header contents
-                    {
-                        if (words.Contains("#MajorVersion"))
-                        {
-                            if (words.Length > 1) CurrentScript.Version = words[1];
-                        }
-                        if (words.Contains("#MinorVersion"))
-                        {
-                            if (words.Length > 1) CurrentScript.Version += "." + words[1];
-                        }
-                    }
-                }
-
-                WindowTitle = file.Name;
-            }
-            catch (Exception e)
-            {
-                WindowTitle = e.Message;
-            }
-        }
+        
 
 
 

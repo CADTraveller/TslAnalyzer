@@ -120,6 +120,11 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
+    <Style TargetType="ToggleSwitch">
+        <Setter Property="FontSize" Value="14"/>
+        
+    </Style>
 
 </ResourceDictionary>
 

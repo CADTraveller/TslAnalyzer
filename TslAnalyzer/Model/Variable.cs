@@ -18,8 +18,14 @@ namespace TslAnalyzer.Model
             Referenced = new ObservableCollection<Line>();
         }
 
-        private string type;
+        private bool isSelected;
+        public bool IsSelected
+        {
+            get { return isSelected; }
+            set { Set(ref isSelected, value); }
+        }
 
+        private string type;
         public string Type
         {
             get { return type; }
@@ -27,7 +33,6 @@ namespace TslAnalyzer.Model
         }
 
         private string name;
-
         public string Name
         {
             get { return name; }
@@ -35,7 +40,6 @@ namespace TslAnalyzer.Model
         }
 
         private ObservableCollection<Line> mutated;
-
         public ObservableCollection<Line> Mutated
         {
             get { return mutated; }
@@ -43,7 +47,6 @@ namespace TslAnalyzer.Model
         }
 
         private ObservableCollection<Line> referenced;
-
         public ObservableCollection<Line> Referenced
         {
             get { return referenced; }

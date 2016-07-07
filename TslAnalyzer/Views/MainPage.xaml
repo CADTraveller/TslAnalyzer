@@ -10,7 +10,11 @@
       xmlns:vm="using:TslAnalyzer.ViewModels" mc:Ignorable="d" 
       MinWidth="500">
     <Page.Resources>
-       
+       <ResourceDictionary>
+           <ResourceDictionary.MergedDictionaries>
+               <ResourceDictionary Source="../Styles/Custom.xaml"/>
+           </ResourceDictionary.MergedDictionaries>
+       </ResourceDictionary>
     </Page.Resources>
 
     <Page.DataContext>
@@ -24,18 +28,37 @@
                              RelativePanel.AlignRightWithPanel="True"
                              RelativePanel.AlignTopWithPanel="True">
             <controls:PageHeader.Content>
-                <StackPanel Orientation="Horizontal">
+                <Grid Width="299">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        
+                    </Grid.ColumnDefinitions>
                     <TextBlock Text="{Binding WindowTitle}"/>
-                    <TextBlock Text="{Binding CurrentScript.Version}"/>
-                    
-                </StackPanel>
+                    <TextBlock Grid.Column="1" Text="{Binding CurrentScript.Version}"/>
+                </Grid>
+
             </controls:PageHeader.Content>
             <AppBarButton Label="Open File"  Command="{Binding BrowseForFileCommand}" Icon="OpenFile" Style="{StaticResource AppBarButtonStyle1}"/>
         </controls:PageHeader>
+<Grid RelativePanel.Below="pageHeader">
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+    </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-        <TextBlock x:Name="mainTextBlock" Margin="16,12,0,0"
-                   RelativePanel.AlignLeftWithPanel="True"
-                   RelativePanel.Below="pageHeader" Text="Hello World" />
+            <StackPanel Name="optionsStackPanel" Orientation="Horizontal" Margin="12,0,0,0">
+                <ToggleSwitch Header="Mutated" IsOn="{Binding ShowMutated}"/>
+                <ToggleSwitch Header="Referenced" IsOn="{Binding ShowReferenced}"/>
+            </StackPanel>
+    <ListView Grid.Row="1"
+                  ItemsSource="{Binding CurrentScript.Variables }"/>
+        </Grid>
+        
 
     </RelativePanel>
 

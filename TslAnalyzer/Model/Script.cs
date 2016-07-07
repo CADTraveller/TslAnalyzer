@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,14 +12,43 @@ namespace TslAnalyzer.Model
     {
         public Script()
         {
-            Lines = new List<Line>();
-            Variables = new List<Variable>();
-            Comments = new List<Line>();
+            Lines = new ObservableCollection<Line>();
+            Variables = new ObservableCollection<Variable>();
+            Comments = new ObservableCollection<string>();
         }
-        public List<Line> Lines;
-        public List<Variable> Variables;
-        public List<Line> Comments;
-        public string Version;
+
+
+        private ObservableCollection<Line> lines;
+
+        public ObservableCollection<Line> Lines
+        {
+            get { return lines; }
+            set { Set(ref lines, value); }
+        }
+
+
+        private ObservableCollection<Variable> variables;
+        public ObservableCollection<Variable> Variables
+        {
+            get { return variables; }
+            set { Set(ref variables, value); }
+        }
+
+
+        private ObservableCollection<string> comments;
+        public ObservableCollection<string> Comments
+        {
+            get { return comments; }
+            set { Set(ref comments, value); }
+        }
+
+        private string version = "V1.0";
+
+        public string Version
+        {
+            get { return version; }
+            set { Set(ref version, value); }
+        }
 
         public void Clear()
         {
