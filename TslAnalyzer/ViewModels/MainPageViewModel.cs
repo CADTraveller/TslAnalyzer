@@ -46,7 +46,11 @@ namespace TslAnalyzer.ViewModels
         public Script CurrentScript
         {
             get { return currentScript; }
-            set { Set(ref currentScript, value); }
+            set
+            {
+                Set(ref currentScript, value);
+                Variables = CurrentScript.Variables;
+            }
         }
 
         private ObservableCollection<Variable> variables;
@@ -80,7 +84,7 @@ namespace TslAnalyzer.ViewModels
             set { Set(ref showReferenced, value); }
         }
 
-       
+
 
         DelegateCommand _refreshFromFile;
         public DelegateCommand RefreshFromFile
@@ -108,7 +112,7 @@ namespace TslAnalyzer.ViewModels
         public DelegateCommand BrowseForFileCommand
             => _browseForFileCommand ?? (new DelegateCommand(executeBrowseForFile));
 
-       
+
 
         private async void executeBrowseForFile()
         {
@@ -123,7 +127,7 @@ namespace TslAnalyzer.ViewModels
             ApplicationData.Current.LocalSettings.Values["lastScriptPath"] = scriptFile.Path;
         }
 
-        
+
 
 
 
