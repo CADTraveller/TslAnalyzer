@@ -57,6 +57,13 @@ namespace TslAnalyzer.Model
             Comments.Clear();
         }
 
+        private string name;
+        public string Name
+        {
+            get { return name; }
+            set { Set(ref name, value); }
+        }
+
         //string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Public\
     }
 }

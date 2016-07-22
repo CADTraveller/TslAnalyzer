@@ -46,7 +46,11 @@ namespace TslAnalyzer.ViewModels
         public Script CurrentScript
         {
             get { return currentScript; }
-            set { Set(ref currentScript, value); }
+            set
+            {
+                Set(ref currentScript, value);
+                WindowTitle = currentScript.Name;
+            }
         }
 
         private ObservableCollection<Variable> variables;
@@ -112,15 +116,16 @@ namespace TslAnalyzer.ViewModels
 
         private async void executeBrowseForFile()
         {
-            FileOpenPicker picker = new FileOpenPicker();
-            picker.FileTypeFilter.Add(".mcr");
+            //FileOpenPicker picker = new FileOpenPicker();
+            //picker.FileTypeFilter.Add(".mcr");
 
-            StorageFile scriptFile = await picker.PickSingleFileAsync();
+            //StorageFile scriptFile = await picker.PickSingleFileAsync();
 
-            if (scriptFile == null) return;
+            //if (scriptFile == null) return;
 
-            CurrentScript = ScriptParser.parseFile(scriptFile).Result;
-            ApplicationData.Current.LocalSettings.Values["lastScriptPath"] = scriptFile.Path;
+            //CurrentScript = ScriptParser.parseFile(scriptFile).Result;
+            CurrentScript = await ScriptParser.GetNewScriptFromFile();
+            //ApplicationData.Current.LocalSettings.Values["lastScriptPath"] = scriptFile.Path;
         }
 
         
