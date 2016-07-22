@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using TslAnalyzer.Model;
+using System.Collections.ObjectModel;
 
 namespace TslAnalyzer.ViewModels
 {
@@ -19,7 +20,6 @@ namespace TslAnalyzer.ViewModels
             {
                 StorageFile lastFile = await StorageFile.GetFileFromPathAsync(filePath);
                 return await parseFile(lastFile);
-
             }
             catch (Exception e)
             {
@@ -32,7 +32,7 @@ namespace TslAnalyzer.ViewModels
             try
             {
                 Script script = new Script();
-                script.Clear();
+                
                 char[] delimiterChars = { ' ', ',', '.', ':', '\t', '=', '/', '(', ')', '[', ']', '*', '+', '>', '<', '?', '!' };
                 IList<string> allLines = await FileIO.ReadLinesAsync(file);
                 bool atContents = false;
@@ -113,6 +113,8 @@ namespace TslAnalyzer.ViewModels
                             if (words.Length > 1) script.Version += "." + words[1];
                         }
                     }
+
+                    //__now done with header section, extract Variables & lines
                 }
 
                 script.Name = scriptFile.DisplayName;
@@ -123,10 +125,28 @@ namespace TslAnalyzer.ViewModels
             {
                 return null;
             }
+        }
 
+        private static void breakLinesAtSemicolons(this IList<string> lines)
+        {
+            List<string> newList = new List<string>();
 
-            // Script newScript = parseFile(scriptFile)?.Result;
-           // return script;
+            foreach (string line in lines)
+            {
+                string newLine = "";
+                List<char> letters = line.ToList<char>();
+                for (int i = 0; i < letters.Count; i++)
+                {
+                    char c = letters[i];
+                    if (c == ':')
+                    {
+                        //__might be escaped in a string literal
+                        if (i > 1 && letters[i - 1] == '\')
+                    }
+                }
+            }
+
+            lines = newList;
         }
     }
 }
