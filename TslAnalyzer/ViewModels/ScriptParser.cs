@@ -141,7 +141,7 @@ namespace TslAnalyzer.ViewModels
                     if (c == ':')
                     {
                         //__might be escaped in a string literal
-                        if (i > 1 && letters[i - 1] == '\')
+                        //if (i > 1 && letters[i - 1] == '\')
                     }
                 }
             }
